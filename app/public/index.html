@@ -55,7 +55,9 @@
           self.seebtn = true;
           clearInterval(self.flag);
           self.see = true;
-          $('#what').animate({top: '40%'});
+          setTimeout(function () {
+            $('#what').animate({top: '40%'});
+          },1000)
           self.currentRestaurant = self.restaurant;
         }
       },
