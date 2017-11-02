@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://files.jser.im/vue.js"></script>
+  <script src="https://files.jser.im/axios.js"></script>
+  <script src="https://files.jser.im/jquery.js"></script>
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- <div id="name">小屁屁 和 大熊熊</div> -->
+    <div id="dinner">晚餐</div>
+    <div id="init">{{restaurant}}</div>
+    <div id="what">吃什么</div>
+    <div id="result" v-show="see">吃 {{currentRestaurant}} 吧</div>
+    <input type="button" value="摇" @click="run" v-show="seebtn">
+    <input type="button" value="停" @click="stop" id="stop">
+  </div>
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        restaurants: '',
+        restaurant: '',
+        index: 0,
+        currentRestaurant: '',
+        see: false,
+        seebtn: true,
+        flag: 0,
+      },
+      methods: {
+        run: function () {
+          var self = this;
+          self.ready(self);
+          self.flag = setInterval(function () {
+            self.changeRestaurant(self);
+          },20)
+        },
+        changeRestaurant: function (self) {
+          var k = Math.floor(Math.random()*self.restaurants.length);
+          self.restaurant = self.restaurants[k].name;
+        },
+        ready: function (self) {
+          self.seebtn = false;
+          $('#what').animate({
+            top: '60%',
+          });
+        },
+        stop: function () {
+          var self = this;
+          self.seebtn = false;
+          clearInterval(self.flag);
+          self.see = true;
+          $('#what').animate({top: '40%'});
+          self.currentRestaurant = self.restaurant;
+        }
+      },
+      mounted: function () {
+        var self = this;
+        axios.get('/getRestaurant').then(function (res) {
+          self.restaurants = res.data.data;
+        })
+      }
+    })
+  </script>
+</body>
+</html>
